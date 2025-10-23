@@ -1,0 +1,99 @@
+import { v4 as uuid } from 'uuid'
+
+const LS = {
+  items: 'ri_items_v2',
+  rentals: 'ri_rentals_v2',
+  customers: 'ri_customers_v2',
+  settings: 'ri_settings_v2',
+  auth: 'ri_auth_v2'
+}
+
+const sampleItems = [
+  { id: uuid(), sku:'DRS-001', name:'Red Silk Dress', category:'Dress', size:'M', price:150, qty:7, img:'' },
+  { id: uuid(), sku:'BAG-014', name:'Pearl Clutch', category:'Accessory', size:'—', price:80, qty:5, img:'' },
+  { id: uuid(), sku:'LEH-030', name:'Bridal Lehenga Gold', category:'Ethnic', size:'Free', price:350, qty:2, img:'' }
+]
+
+const sampleCustomers = [
+  { id: uuid(), name:'Danisha', phone:'9876543210', email:'danisha1@gmail.com', note:'' },
+  { id: uuid(), name:'Tanushka Sharma', phone:'9988776655', email:'tanushka9@gmail.com', note:'' }
+]
+
+const sampleRentals = []
+
+const demoUsers = [
+  { id: 'u-admin', username:'admin', password:'admin123', role:'admin', name:'Admin User' },
+  { id: 'u-staff', username:'staff', password:'staff123', role:'staff', name:'Staff Member' }
+]
+
+export function seedDemoData(){
+  if(!localStorage.getItem(LS.items)) localStorage.setItem(LS.items, JSON.stringify(sampleItems))
+  if(!localStorage.getItem(LS.customers)) localStorage.setItem(LS.customers, JSON.stringify(sampleCustomers))
+  if(!localStorage.getItem(LS.rentals)) localStorage.setItem(LS.rentals, JSON.stringify(sampleRentals))
+  if(!localStorage.getItem(LS.settings)) localStorage.setItem(LS.settings, JSON.stringify({ currency:'₹', taxPercent:0 }))
+  if(!localStorage.getItem(LS.auth)) localStorage.setItem(LS.auth, JSON.stringify({ users: demoUsers, current: null }))
+}
+
+const read = (k) => JSON.parse(localStorage.getItem(k) || '[]')
+const write = (k, v) => localStorage.setItem(k, JSON.stringify(v))
+
+// Auth
+export const login = ({ username, password }) => {
+  const auth = JSON.parse(localStorage.getItem(LS.auth) || '{}')
+  const users = auth.users || []
+  const u = users.find(x => x.username === username && x.password === password)
+  if(!u) throw new Error('Invalid credentials')
+  auth.current = u
+  localStorage.setItem(LS.auth, JSON.stringify(auth))
+  return u
+}
+export const getAuthUser = () => {
+  const auth = JSON.parse(localStorage.getItem(LS.auth) || '{}')
+  return auth.current || null
+}
+export const logout = () => {
+  const auth = JSON.parse(localStorage.getItem(LS.auth) || '{}')
+  auth.current = null
+  localStorage.setItem(LS.auth, JSON.stringify(auth))
+}
+
+// Items
+export const getItems = () => JSON.parse(localStorage.getItem(LS.items) || '[]')
+export const addItem = (it) => {
+  const all = getItems(); const n = { ...it, id: uuid() }; all.push(n); localStorage.setItem(LS.items, JSON.stringify(all)); return n
+}
+export const updateItem = (id, patch) => {
+  const all = getItems().map(i=> i.id===id ? {...i, ...patch} : i); localStorage.setItem(LS.items, JSON.stringify(all))
+}
+export const findItemBySKU = (sku) => getItems().find(i => i.sku.toLowerCase() === sku.toLowerCase())
+
+// Customers
+export const getCustomers = () => JSON.parse(localStorage.getItem(LS.customers) || '[]')
+export const addCustomer = (c) => { const all = getCustomers(); const n = {...c, id: uuid()}; all.push(n); localStorage.setItem(LS.customers, JSON.stringify(all)); return n }
+
+// Rentals
+export const getRentals = () => JSON.parse(localStorage.getItem(LS.rentals) || '[]')
+export const rentItem = ({ sku, customerName, qty, rate, deposit, dueOn }) => {
+  const items = getItems()
+  const item = items.find(i => i.sku.toLowerCase() === sku.toLowerCase())
+  if(!item) throw new Error('Item not found')
+  if(item.qty < qty) throw new Error('Insufficient stock')
+  item.qty -= qty
+  localStorage.setItem(LS.items, JSON.stringify(items))
+  const all = getRentals()
+  const rec = { id: uuid(), sku:item.sku, itemName:item.name, customerName:customerName||'Walk-in', qty, rate, deposit, status:'rented', rentedOn: new Date().toISOString(), dueOn }
+  all.push(rec); localStorage.setItem(LS.rentals, JSON.stringify(all)); return rec
+}
+export const returnRental = (id) => {
+  const all = getRentals()
+  const r = all.find(x=>x.id===id)
+  if(!r) throw new Error('Rental not found')
+  if(r.status==='returned') return
+  r.status='returned'; r.returnedOn = new Date().toISOString(); localStorage.setItem(LS.rentals, JSON.stringify(all))
+  const items = getItems(); const item = items.find(i=>i.sku===r.sku); if(item){ item.qty += r.qty; localStorage.setItem(LS.items, JSON.stringify(items)) }
+}
+
+// Settings
+export const getSettings = () => JSON.parse(localStorage.getItem(LS.settings) || '{}')
+export const saveSettings = (s) => localStorage.setItem(LS.settings, JSON.stringify(s))
+

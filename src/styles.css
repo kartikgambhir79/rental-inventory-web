@@ -1,0 +1,383 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #fdf2f8, #fce7f3);
+  color: #2d2d2d;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  padding: 20px;
+  background: #f9a8d4;
+  border-right: 1px solid #e5e7eb;
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  font-weight: 800;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  color: #4a044e;
+}
+
+.brand .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ec4899;
+  box-shadow: 0 0 10px #ec4899;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav a {
+  padding: 10px;
+  border-radius: 8px;
+  color: #4b5563;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.nav a.active,
+.nav a:hover {
+  background: rgba(236, 72, 153, 0.15);
+  color: #1f2937;
+  transform: translateX(4px);
+}
+
+.content {
+  padding: 22px;
+}
+
+.card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+/* Buttons */
+.btn {
+  background: linear-gradient(135deg, #ec4899, #d946ef);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(217, 70, 239, 0.25);
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, #db2777, #a21caf);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(217, 70, 239, 0.35);
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.btn.secondary:hover {
+  background: rgba(236, 72, 153, 0.1);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* Form Fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  border-radius: 8px;
+  color: #374151;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #ec4899;
+  box-shadow: 0 0 6px rgba(236, 72, 153, 0.4);
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.table th {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: left;
+  padding: 8px 10px;
+  font-weight: 600;
+}
+
+.table td {
+  padding: 10px;
+  border-top: 1px solid #f3f4f6;
+  transition: background 0.25s ease;
+}
+
+.table tr:hover td {
+  background: #fdf2f8;
+}
+
+/* Wrapper background */
+.loginWrap {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f9a8d4, #c084fc);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Login card styling */
+.loginCard {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2.5rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 400px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+  backdrop-filter: blur(1px);
+}
+
+/* Titles */
+.loginCard .title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #6d28d9;
+  margin-bottom: 0.3rem;
+}
+
+.loginCard .subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* Form fields */
+.field {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: #7c3aed;
+  display: block;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.field input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  color: white;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Forgot Password / Sign Up links */
+.link-btn {
+  background: none;
+  border: none;
+  color: #6d28d9;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.link-btn:hover {
+  color: #8b5cf6;
+}
+
+/* Messages */
+.errorMsg {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.successMsg {
+  background: #dcfce7;
+  color: #15803d;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 450px) {
+  .loginCard {
+    width: 90%;
+    padding: 2rem 1.5rem;
+  }
+}
+/* === Link-style Buttons (Forgot Password, Sign Up, etc.) === */
+.link-btn {
+  background: none;
+  border: none;
+  color: #6d28d9; /* purple shade matching your title */
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.3s ease, transform 0.2s ease;
+  text-decoration: none;
+  padding: 0;
+}
+
+.link-btn:hover {
+  color: #9333ea; /* lighter purple hover */
+  transform: translateY(-1px);
+  text-decoration: underline;
+}
+
+/* Optional: add a smooth click effect */
+.link-btn:active {
+  transform: scale(0.97);
+}
+
+/* Success message for confirmation like "Password reset sent" */
+.successMsg {
+  background: #dcfce7;
+  color: #166534;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Make login and signup buttons consistent */
+.btn {
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 100%;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+input[type="text"],
+select {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 6px 40px;
+  background-color: #fff;
+  transition: 0.2s;
+  margin: 20px;
+}
+input[type="text"]:focus,
+select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+ 
