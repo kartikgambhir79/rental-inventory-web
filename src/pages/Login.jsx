@@ -1,225 +1,33 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-// NOTE: Auto-updated: use api.login({email,password}) and api.saveAuth({token,user}) to persist auth.
-// src/components/Login.jsx
-import React, { useState } from "react";
-import * as api from '../api/api';
-import { login } from "../api/mockApi.js";
-import bgImg from "../assets/Login.jpg";
+export default function Login(){
+  const [email, setEmail] = useState('admin@boutique.com');
+  const [password, setPassword] = useState('admin123');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-
-export default function Login({ onLogin }) {
-  const [view, setView] = useState("login");
-  const [u, setU] = useState("");
-  const [p, setP] = useState("");
-  const [email, setEmail] = useState("");
-  const [err, setErr] = useState("");
-  const [msg, setMsg] = useState("");
-
-  const resetMessages = () => {
-    setErr("");
-    setMsg("");
-  };
-
-  const handleLogin = (e) => {
+  const submit = async (e) =>{
     e.preventDefault();
-    resetMessages();
-    try {
-      const user = api.login({ email: u, password: p });
-      onLogin(user);
-    } catch (e) {
-      setErr(e.message);
-    }
-  };
-
-  const handleForgotPassword = (e) => {
-    e.preventDefault();
-    resetMessages();
-    if (!email) return setErr("Please enter your registered email.");
-    setMsg(`Password reset link sent to ${email}`);
-  };
-
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    resetMessages();
-    if (!u || !email || !p)
-      return setErr("Please fill all fields to register.");
-    setMsg("Account created successfully! Redirecting to login...");
-    setTimeout(() => setView("login"), 1500);
+    setLoading(true);
+    try{
+      await login({ email, password });
+      navigate('/');
+    }catch(err){}
+    setLoading(false);
   };
 
   return (
-    <div
-      className="loginWrap"
-      style={{
-        backgroundImage: `url(${bgImg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="loginCard">
-        <h2 className="title">
-          {view === "login"
-            ? "Timeless Trunk"
-            : view === "forgot"
-              ? "Forgot Password"
-              : "Create Account"}
-        </h2>
-        <p className="subtitle">
-          {view === "login"
-            ? "Sign in to continue"
-            : view === "forgot"
-              ? "Reset your password"
-              : "Register a new account"}
-        </p>
-
-        {/* ✅ Animated form area */}
-        <div key={view} className="formContainer fadeSlide">
-          {view === "login" && (
-            <form onSubmit={handleLogin}>
-              <div className="field">
-                <label>Username</label>
-                <input
-                  value={u}
-                  onChange={(e) => setU(e.target.value)}
-                  placeholder="Enter username"
-                />
-              </div>
-
-              <div className="field">
-                <label>Password</label>
-                <input
-                  type="password"
-                  value={p}
-                  onChange={(e) => setP(e.target.value)}
-                  placeholder="Enter password"
-                />
-              </div>
-
-              <div style={{ textAlign: "right", marginBottom: "1rem" }}>
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => {
-                    setView("forgot");
-                    resetMessages();
-                  }}
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
-              {err && <div className="errorMsg">{err}</div>}
-              {msg && <div className="successMsg">{msg}</div>}
-
-              <button type="submit" className="btn">
-                Log In
-              </button>
-
-              <p style={{ marginTop: "1rem", fontSize: "0.9rem" }}>
-                Don’t have an account?{" "}
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => {
-                    setView("signup");
-                    resetMessages();
-                  }}
-                >
-                  Sign Up
-                </button>
-              </p>
-            </form>
-          )}
-
-          {view === "forgot" && (
-            <form onSubmit={handleForgotPassword}>
-              <div className="field">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your registered email"
-                />
-              </div>
-
-              {err && <div className="errorMsg">{err}</div>}
-              {msg && <div className="successMsg">{msg}</div>}
-
-              <button type="submit" className="btn">
-                Send Reset Link
-              </button>
-
-              <p style={{ marginTop: "1rem", fontSize: "0.9rem" }}>
-                Back to{" "}
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => {
-                    setView("login");
-                    resetMessages();
-                  }}
-                >
-                  Login
-                </button>
-              </p>
-            </form>
-          )}
-
-          {view === "signup" && (
-            <form onSubmit={handleSignUp}>
-              <div className="field">
-                <label>Username</label>
-                <input
-                  value={u}
-                  onChange={(e) => setU(e.target.value)}
-                  placeholder="Choose a username"
-                />
-              </div>
-
-              <div className="field">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="field">
-                <label>Password</label>
-                <input
-                  type="password"
-                  value={p}
-                  onChange={(e) => setP(e.target.value)}
-                  placeholder="Create a password"
-                />
-              </div>
-
-              {err && <div className="errorMsg">{err}</div>}
-              {msg && <div className="successMsg">{msg}</div>}
-
-              <button type="submit" className="btn">
-                Sign Up
-              </button>
-
-              <p style={{ marginTop: "1rem", fontSize: "0.9rem" }}>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  className="link-btn"
-                  onClick={() => {
-                    setView("login");
-                    resetMessages();
-                  }}
-                >
-                  Log In
-                </button>
-              </p>
-            </form>
-          )}
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="max-w-md w-full bg-white rounded p-6 shadow">
+        <h2 className="text-2xl font-semibold mb-4">Sign in</h2>
+        <form onSubmit={submit} className="space-y-4">
+          <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="w-full border p-2 rounded" />
+          <input value={password} onChange={e=>setPassword(e.target.value)} type="password" placeholder="Password" className="w-full border p-2 rounded" />
+          <button disabled={loading} className="w-full bg-indigo-600 text-white py-2 rounded">{loading ? 'Signing...' : 'Sign in'}</button>
+        </form>
       </div>
     </div>
   );

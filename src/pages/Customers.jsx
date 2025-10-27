@@ -1,32 +1,27 @@
-import React, { useState } from 'react'
-import Header from '../components/Header.jsx'
-import { getCustomers, addCustomer } from '../api/mockApi.js'
+import React, { useEffect, useState } from 'react';
+import api from '../api/axios';
+import CustomerForm from '../components/page-specific/customers/CustomerForm';
 
 export default function Customers(){
-  const [customers, setCustomers] = useState(getCustomers())
-  const [form, setForm] = useState({name:'',phone:'',email:'',note:''})
+  const [customers, setCustomers] = useState([]);
+  const load = async ()=>{ try{ const res = await api.get('/customers'); setCustomers(res.data); }catch{} };
+  useEffect(()=>{ load(); },[]);
 
-  const add = ()=>{ if(!form.name) return alert('Name required'); addCustomer(form); setCustomers(getCustomers()); setForm({name:'',phone:'',email:'',note:''}) }
+  const add = async (data)=>{ await api.post('/customers', data); load(); };
 
   return (
-    <div>
-      <Header title="Customers" />
-      <div className="card" style={{marginBottom:12}}>
-        <div className="grid" style={{gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))'}}>
-          <div className="field"><label>Name</label><input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} /></div>
-          <div className="field"><label>Phone</label><input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} /></div>
-          <div className="field"><label>Email</label><input value={form.email} onChange={e=>setForm({...form,email:e.target.value})} /></div>
-          <div className="field" style={{gridColumn:'1 / -1'}}><label>Note</label><textarea value={form.note} onChange={e=>setForm({...form,note:e.target.value})}></textarea></div>
-        </div>
-        <div style={{marginTop:8}}><button className="btn" onClick={add}>Add Customer</button></div>
-      </div>
-
-      <div className="card">
-        <table className="table">
-          <thead><tr><th>Name</th><th>Phone</th><th>Email</th></tr></thead>
-          <tbody>{customers.map(c=> <tr key={c.id}><td>{c.name}</td><td>{c.phone}</td><td>{c.email}</td></tr>)}</tbody>
-        </table>
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-4">Customers</h2>
+      <CustomerForm onSubmit={add} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        {customers.map(c=> (
+          <div key={c._id} className="bg-white p-4 rounded shadow">
+            <div className="font-semibold">{c.name}</div>
+            <div className="text-sm text-slate-500">{c.phone}</div>
+            <div className="text-xs text-slate-400">{c.email}</div>
+          </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }

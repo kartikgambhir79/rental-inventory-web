@@ -1,13 +1,37 @@
-# Rental Inventory Frontend 
+# Rental Inventory Dashboard (Frontend)
 
-Password:
-- admin / admin123 (admin)
-- staff / staff123 (staff)
+Tech stack:
+- React + Vite
+- Tailwind CSS
+- Axios (interceptors)
+- React Router DOM
+- React Hook Form
+- React Hot Toast
+- Framer Motion
+- Quagga (for camera barcode scanning - placeholder included)
 
-Quick start:
-1. npm install
-2. npm run dev
+## Setup
 
-Notes:
-- Camera scanner requires HTTPS or localhost and permission from the browser.
-- To connect to a real backend, replace src/api/mockApi.js functions with fetch/axios calls.
+1. Install deps:
+```
+npm install
+```
+
+2. Prepare tailwind:
+```
+npx tailwindcss init -p
+```
+Make sure `tailwind.config.cjs` content is already set.
+
+3. Create `.env` in project root (optional):
+```
+VITE_API_BASE=http://localhost:5000/api
+```
+
+4. Run:
+```
+npm run dev
+```
+
+The frontend expects the backend at `http://localhost:5000/api`.
+
