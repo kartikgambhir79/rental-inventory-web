@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
+// const baseURL = import.meta.env.VITE_API_BASE || 'https://rental-inventory-backend.onrender.com/api';
 const baseURL = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
 
-const api = axios.create({ baseURL, timeout: 10000 });
+
+const api = axios.create({ baseURL, timeout: 15000 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
