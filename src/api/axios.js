@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { BACKEND_URL } from '../utils/constant';
 
-// const baseURL = import.meta.env.VITE_API_BASE || 'https://rental-inventory-backend.onrender.com/api';
-const baseURL = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
+const baseURL = import.meta.env.VITE_API_BASE || `${BACKEND_URL}/api`;
 
 
 const api = axios.create({ baseURL, timeout: 15000 });

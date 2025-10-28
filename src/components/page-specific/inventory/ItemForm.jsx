@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 
-export default function ItemForm({ onSubmit, initial = {} }){
+export default function ItemForm({ onSubmit, initial = {} }) {
   const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initial });
   return (
     <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data" className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -15,19 +15,24 @@ export default function ItemForm({ onSubmit, initial = {} }){
       </div>
       <div>
         <label className="text-sm font-medium">Size</label>
-        <input {...register('size')} className="mt-1 w-full border p-2 rounded" />
+        <select {...register('size')} className="mt-1 w-full border p-2 rounded">
+          <option value="">Select Size</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+          <option value="XXXL">XXXL</option>
+          <option value="XXXXL">XXXXL</option>
+        </select>
       </div>
       <div>
         <label className="text-sm font-medium">Color</label>
         <input {...register('color')} className="mt-1 w-full border p-2 rounded" />
       </div>
       <div>
-        <label className="text-sm font-medium">Price per day</label>
-        <input type="number" {...register('pricePerDay', { valueAsNumber: true })} className="mt-1 w-full border p-2 rounded" />
-      </div>
-      <div>
-        <label className="text-sm font-medium">RFID Tag (optional)</label>
-        <input {...register('rfidTag')} className="mt-1 w-full border p-2 rounded" />
+        <label className="text-sm font-medium">Rent</label>
+        <input type="number" {...register('rent', { valueAsNumber: true })} className="mt-1 w-full border p-2 rounded" />
       </div>
       <div>
         <label className="text-sm font-medium">Product Image</label>

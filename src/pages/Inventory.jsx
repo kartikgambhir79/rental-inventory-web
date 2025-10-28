@@ -3,6 +3,7 @@ import api from '../api/axios';
 import Modal from '../components/common/Modal';
 import ItemForm from '../components/page-specific/inventory/ItemForm';
 import Spinner from '../components/common/Spinner';
+import { BACKEND_URL } from '../utils/constant';
 
 export default function Inventory() {
   const [items, setItems] = useState([]);
@@ -11,7 +12,7 @@ export default function Inventory() {
   const [selected, setSelected] = useState(null);
   const [query, setQuery] = useState('');
 
-  const load = async () => { setLoading(true); try { const res = await api.get('/items'); setItems(res.data); } catch (err) { } finally { setLoading(false); } };
+  const load = async () => { setLoading(true); try { const res = await api.get('/items'); setItems(res.data?.items); } catch (err) { } finally { setLoading(false); } };
 
   useEffect(() => { load(); }, []);
 
@@ -66,7 +67,7 @@ export default function Inventory() {
             <tbody>
               {filtered.map(it => (
                 <tr key={it._id} className="border-t hover:bg-slate-50 cursor-pointer" onClick={() => setSelected(it)}>
-                  <td className="p-3"><img src={it.imageUrl || it.barcodeImage || 'https://via.placeholder.com/80'} alt="" className="w-16 h-12 object-cover rounded" /></td>
+                  <td className="p-3"><img src={`${BACKEND_URL}/${it.productImage}`} alt="" className="w-16 h-12 object-fill rounded" /></td>
                   <td className="p-3">{it.name}</td>
                   <td className="p-3 text-sm text-slate-500">{it.category}</td>
                   <td className="p-3 text-indigo-600">{it.itemCode}</td>
@@ -89,16 +90,44 @@ export default function Inventory() {
         {selected && (
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <img src={selected.imageUrl || selected.barcodeImage || 'https://via.placeholder.com/400'} alt="" className="w-full h-80 object-cover rounded" />
+              <img src={`${BACKEND_URL}/${selected.productImage}`} alt="" className="w-full h-80 object-fill rounded" />
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-2">{selected.name}</h3>
               <div className="text-sm text-slate-500 mb-2">{selected.category} • {selected.size} • {selected.color}</div>
               <div className="mb-4">Code: <strong>{selected.itemCode}</strong></div>
               {selected.barcodeImage && <div className="mb-4">
-                <img src={selected.barcodeImage} alt="barcode" className="w-48 h-24 object-contain" />
+                <img src={`${BACKEND_URL}/${selected.barcodeImage}`} alt="barcode" className="w-48 h-24 object-contain" />
                 <div className="mt-2">
-                  <button onClick={() => { const w = window.open(''); w.document.write('<img src="' + selected.barcodeImage + '"/>'); w.print(); w.close(); }} className="bg-indigo-600 text-white px-3 py-1 rounded">Print Barcode</button>
+                  <button
+                    onClick={() => {
+                      const printWindow = window.open('');
+                      printWindow.document.write(`
+                      <html>
+                        <head>
+                          <title>Print Barcode</title>
+                          <style>
+                            body { text-align: center; margin-top: 50px; }
+                            img { width: 250px; height: auto; }
+                          </style>
+                        </head>
+                        <body>
+                          <img src="${BACKEND_URL}/${selected.barcodeImage}" alt="barcode" />
+                          <script>
+                            window.onload = function() {
+                              window.print();
+                              window.onafterprint = function() { window.close(); };
+                            };
+                          </script>
+                        </body>
+                      </html>
+                    `);
+                      printWindow.document.close();
+                    }}
+                    className="bg-indigo-600 text-white px-3 py-1 rounded"
+                  >
+                    Print Barcode
+                  </button>
                 </div>
               </div>}
             </div>
